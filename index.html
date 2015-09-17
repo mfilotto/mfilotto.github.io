@@ -1,1 +1,400 @@
-Hello World
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>CV Mathieu Filotto</title>
+        <script data-require="jquery@*" data-semver="2.1.4" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <link data-require="bootstrap@*" data-semver="3.3.4" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css"
+        />
+        <script data-require="bootstrap@*" data-semver="3.3.4" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <style>          
+            body {
+                padding-top: 130px;
+                padding-bottom: 40px;
+            }
+            @media (max-width: 767px) {
+                body {
+                    padding-top: 180px;
+                }
+            }
+            .list-group-item {
+                width:100%;
+	         }
+            .list-group-item.active{
+                margin-left:-2%;
+                width:104%;
+                font-size:105%;
+                border-radius:5px;
+	         }
+             footer {
+                background-color: #f8f8f8;
+                border:1px solid #e7e7e7;
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                left: 0;
+                height:40px;
+                width:100%;
+                text-align:center;
+             }
+        </style>
+    </head>
+    
+    <body ng-app="cvApp">
+        <div class="container">
+            <header class="row">
+                <div ui-view="header"></div>
+            </header>
+            <section class="row">
+                <div class="col-sm-4">
+                    <div ui-view="list"></div>
+                </div>
+                <div class="col-sm-8">
+                    <div ui-view="skills"></div>
+                    <div ui-view="education"></div>
+                    <div ui-view="detail"></div>
+                </div>
+            </section>
+            <footer class="row">
+                <div ui-view="footer"></div>
+            </footer>
+        </div>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-sanitize.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
+        <script type="text/javascript" src="https://rawgit.com/Hypercubed/angular-marked/master/angular-marked.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>                                    
+        <script type="text/ng-template" id="header.html">
+            <div class="navbar navbar-default navbar-fixed-top">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-7">
+                    <h2>{{contact.name}}</h2>
+                    <h4><small>{{contact.expertise}}</small></h4>
+                </div>
+                <div class="col-sm-3">
+                    <h6>
+                        <i class="glyphicon glyphicon-envelope"></i>
+                        <a href="mailto:{{contact.email}}">{{contact.email}}</a>
+                    </h6>
+                    <h6>
+                        <i class="glyphicon glyphicon-phone"></i>                    
+                        <a href="tel:{{contact.phone}}">{{contact.phone}}</a>
+                    </h6>   
+                </div>
+            </div>
+        </script>
+        <script type="text/ng-template" id="footer.html">
+            <h4>
+                <small>
+                    {{about.lastUpdate}}
+                    <i class="glyphicon glyphicon-heart"></i>                    
+                    {{about.technoStack}}
+                </small>
+            </h4>
+        </script>
+        <script type="text/ng-template" id="skills.html">
+            <div class="jumbotron">
+                <h3>Compétences techniques</h3>
+                <div>
+                   <span class="text-muted">Langages :</span> {{skills.itlanguages}}
+                </div>
+                <div>
+                    <span class="text-muted">Frameworks :</span> {{skills.frameworks}}
+                </div>                            
+                <div>
+                    <span class="text-muted">DevOPS :</span> {{skills.devops}}
+                </div>                            
+            </div>
+        </script>
+        <script type="text/ng-template" id="education.html">
+            <div class="jumbotron">
+                <h3>Formation</h3>
+                <div>
+                    <span class="text-muted">Langues :</span> {{education.languages}}
+                </div>
+                <div>
+                    <span class="text-muted">Diplôme :</span> {{education.diploma}}
+                </div>                            
+            </div>
+        </script>
+        <script type="text/ng-template" id="list.html">
+            <div class="list-group">
+                <a ui-sref="cv.detail({id: item.id})" ui-sref-active="active" class="list-group-item" ng-repeat="item in items | orderBy:'startDate':true">                     
+                    <h4 class="list-group-item-heading">{{item.summary}}</h4>
+                    <span class="badge">{{item.startDate}}</span>
+                    <p class="list-group-item-text">
+                        {{item.company}}
+                    </p>  
+                </a>
+            </div>
+        </script>
+        <script type="text/ng-template" id="detail.html">
+            <div class="jumbotron" ng-show="item">
+                <h3>{{item.company}}</h3>
+                {{item.startDate | date : 'MMM yyyy'}} à {{item.endDate}}
+                <br/>                <br/>
+                <div>
+                    <span class="text-muted">Projet :</span>
+                    <div marked="item.project"></div>
+                </div>                
+                <div>
+                    <span class="text-muted">Mission :</span> 
+                    <div marked="item.mission"></div>
+                </div>                
+                <div class="text-danger">
+                    <div>Environnement technique : </div>
+                    <div marked="item.technicalEnv"></div> 
+                </div>                
+            </div>
+        </script>
+        <script type="text/javascript">
+            function HeaderController($scope, contact) {
+                $scope.contact = contact;
+            }             
+
+            function FooterController($scope, about) {
+                $scope.about = about;
+            } 
+            
+            function SkillsController($scope, skills) {
+                $scope.skills = skills;
+            } 
+            
+            function EducationController($scope, education) {
+                $scope.education = education;
+            } 
+            
+            function ListController($scope, $state, items) {
+                $scope.items = items;
+            }
+    
+            function DetailController($scope, item) {
+                $scope.item = item;
+            }
+    
+            function configRoute($stateProvider, $urlRouterProvider) {
+                $stateProvider.
+                state("cv", {
+                    url: "/",
+                    views: {
+                        'header@': {
+                            templateUrl: 'header.html',
+                            controller: HeaderController,
+                            resolve: {
+                                contact: function(db) {                
+                                    return db.getContact();
+                                }
+                            }                        
+                        },
+                        'footer@': {
+                            templateUrl: 'footer.html',
+                            controller: FooterController,
+                            resolve: {
+                                about: function(db) {                
+                                    return db.getAbout();
+                                }
+                            }                        
+                        },
+                        'skills@': {
+                            templateUrl: 'skills.html',
+                            controller: SkillsController,
+                            resolve: {
+                                skills: function(db) {                
+                                    return db.getSkills();
+                                }
+                            }                        
+                        },
+                        'education@': {
+                            templateUrl: 'education.html',
+                            controller: EducationController,
+                            resolve: {
+                                education: function(db) {                
+                                    return db.getEducation();
+                                }
+                            }                        
+                        },
+                        'list@': {
+                            templateUrl: 'list.html',
+                            controller: ListController,
+                            resolve: {
+                                items: function(db) {                
+                                    return db.getItems(0);
+                                }
+                            }
+                        },
+                        'detail@': {
+                            template: '<div class="jumbotron" ng-hide="item">Selectionner une expérience de la liste</div>'
+                        }
+                    }
+                })
+                .state("cv.detail", {
+                    url: "{id:[0-9]{1,4}}",
+                    views: {
+                        'detail@': {
+                            templateUrl: 'detail.html',
+                            controller: DetailController
+                        }
+                    },
+                    resolve: {
+                        item: function(db, $stateParams) {                
+                            return db.getItems($stateParams.id);
+                        }
+                    }
+                });
+                $urlRouterProvider.otherwise("/");
+            }    
+    
+            angular.module('cvApp', ['ui.router', 'ngSanitize', 'hc.marked'])
+                .config(configRoute)
+                .service('db', function () {
+                    var about = {
+                        "lastUpdate": "juin 2015",
+                        "technoStack": "Angular 1.4 - Boostrap 3.3.4"
+                    };
+                    var me = {
+                        "name": "Filotto Mathieu",
+                        "expertise": "Architecture, Conception, Développement et Intégration d’applications – Nouvelles technologies",
+                        "email": "filotto.mathieu@gmail.com",
+                        "phone": "+687 98 75 64"
+                    };
+                    var education = {
+                        "languages": "Anglais courant / Espagnol notions",
+                        "diploma": "1998-2001 : Ingénieur en informatique de l'ENSIETA Brest"
+                    };                    
+                    var skills = {
+                        "itlanguages": "Java, UML, XML, HTML, Javascript",
+                        "frameworks": "JavaEE, Hibernate, Oracle ADF, Angular",
+                        "devops": "Maven, Gradle, Gulp, Npm, Bamboo, Gitlab"
+                    };                    
+                    var items = [{
+                        "id": "1",
+                        "company": "CNES", 
+                        "summary": "Stage de 6 mois : développement en C d’un logiciel de compression d’images suivant la norme ISO/JPEG2000",
+                        "project": "Stage de fin d’études",
+                        "mission": "Programmation en C d’un logiciel de compression d’images ISO/JPEG2000",
+                        "technicalEnv": "* C",
+                        "startDate": "2001-03", 
+                        "endDate": "2001-09"
+        }, {
+                        "id": "2",
+                        "company": "CNES", 
+                        "summary": "Projet SEISM : action R&T étudiant une nouvelle génération superviseurs de stations sol distantes, développement JAVA",
+                        "project":"L’action R&T SEISM a pour objectif d’étudier et implémenter une nouvelle génération de superviseurs de stations sol distantes dans l’optique d’un renouvellement du système actuel GASCON.\n\n Le projet s’appuie sur une plate-forme CAMELEON (dev par ALCATEL) basée sur des technologies objets et standards CORBA, CIM, WBEM, JAVA. \n\nLe projet a pour objectif majeur d’analyser l’adéquation de la plate-forme CAMELEON à la problématique de supervision de stations sol distantes.\n\n La prise en compte de ces objectifs est mise en œuvre sur une maquette probatoire qui pourrait servir de base au développement du futur système de supervision des stations multi-missions du CNES.\n\n ALCATEL NSD est sous traitant et a une mission d’expertise sur la plate-forme CAMELEON.",
+                        "mission":"Développeur JAVA : Conception, intégration et validation des modules",
+                        "technicalEnv": "* PC sous Windows NT, JAVA, CORBA (Visibroker), XML, MOF\n* Protocoles réseau : RS232, IEEE488, SNMP\n* Développement et gestion en configuration sous WinCVS\n* Conception UML/CIM (utilisation Objecteering)",
+                        "startDate": "2001-10", 
+                        "endDate": "2002-03"
+        }, {
+                        "id": "3",
+                        "company": "CLS", 
+                        "summary": "Projet NOVACOM : maintenance évolutive d’un serveur web",
+                        "project": "Le système Novacom, articulé autour d'une plate-forme informatique, est un système pouvant récupérer, traiter, enrichir et diffuser des informations en provenance de terminaux installés sur des assets (mobiles ou fixes). Les utilisateurs de Novacom peuvent consulter ces informations par l'intermédiaire de logiciels spécifiques. Cette consultation se fait à partir d'un browser. Les fonctionnalités principales de cette plate-forme sont résumées ci-après :* Communiquer avec des terminaux distants, par l'intermédiaire d'opérateurs de télécommunication (ex : Argos, Orbcomm, opérateur SMS) pour récupérer et envoyer des informations (ex : positionnement, valeurs capteur) sous la forme de messages courts,* Traiter, enrichir les informations reçues et les intégrer dans une base de données,* Générer des alertes applicatives (ex : dépassement de seuil pour une valeur capteur, non émission dans les délais, présence en zone interdite) ou système (fonctionnement de la plate-forme),* Fournir des applicatifs utilisateurs spécifiques à un secteur industriel (ex : cartographie, télésurveillance), ces derniers étant consultables par Internet depuis un navigateur du marché, \n\nLa plate-forme NOVACOM doit ainsi être considérée comme le point central de l'activité commerciale de NOVACOM.",
+                        "mission": "Développeur JAVA, jsp/Servlet : développement, intégration et validation des modules. A partir des spécifications client concernant de nouvelles évolutions de la plate-forme, conception sous Rose puis génération du squelette des classes, conception papier, puis implémentation, intégration et validation des modules. \n\nUn reverse engineering est appliqué pour les modules impactés du socle.",
+                        "technicalEnv": "* PC sous Windows NT, Java, ORACLE, XML, jsp/Servlet \n* Développement et gestion en configuration sous WinCVS \n* Conception et reverse UML (utilisation Rose).",
+                        "startDate": "2002-04", 
+                        "endDate": "2002-07"
+        }, {
+                        "id": "4",
+                        "company": "CNES", 
+                        "summary": "Projet CAMELEON : maintenance évolutive et correctiv",
+                        "project": "Maintenance corrective et évolutive de CAMELEON\n\n* Corrections des anomalies pour répondre aux besoins opérationnels du projet DEMETER\n\n* Portage de la plate-forme en jdk1.3\n\nLe produit CAMELEON est une plate-forme logicielle d’intégration et de supervision s’appuyant sur les standards CORBA, CIM, WBEM et JAVA. Cette plate-forme offre les fonctionnalités et mécanismes de base permettant le développement de nouveaux services (métiers et techniques) et l’intégration de nouveaux composants du marché et/ou d’environnements hétérogènes autour d’une plate-forme fédératrice pouvant être déployée sur n’importe quelle architecture matérielle. \n\nLe produit CAMELEON offre :\n\n* des outils (générateur de référentiel, fonctions techniques) et méthodologies de développement et d’intégration de nouveaux services, \n\n* un environnement d’exécution tolérant aux pannes et sécurisé, offrant  des outils de test et de débuggage (cf. CIMWatch) pouvant être déployé sans contrainte sur tout type d’architecture cible.\n\n* Un service de suivi et d’exécution d’enchaînements de traitements multi-environnements (UNIX, NT, CORBA) et distribué (selon les besoins de l’architecture cible).",
+                        "mission": "Développeur JAVA",
+                        "technicalEnv": "* PC sous Windows NT, JAVA, CORBA (Visibroker), XML, MOF\n* Développement et gestion en configuration sous WinCVS",
+                        "startDate": "2002-07", 
+                        "endDate": "2003-09"
+        }, {
+                        "id": "5",
+                        "company": "Eutelsat", 
+                        "summary": "Projet FIP : développement en C du système",
+                        "project": "Le système FIP opère avec le système de télégestion d’EUTELSAT. Il gère les communications avec l’ensemble des équipements liés à une antenne. Il a pour mission de déporter la gestion des équipements au plus près de l’antenne.\n\nLes fonctions principales du logiciel FIP sont :\n\n* Réception des commandes en provenance de l’EACS et des postes opérateur.\n\n* Analyse et contrôle des commandes\n\n* Envoi des commandes vers les équipements appropriés, collecte des données de la télémétrie\n\n* Gestion des communications vers ces équipements",
+                        "mission": "Développeur C : développement, intégration validation de 50% du projet. A partir des documents de conception, réalisation de la conception détaillées, puis implémentation, intégration et validation.",
+                        "technicalEnv": "* PC sous Linux Red Hat, C\n* Protocoles réseau : RS232, IEEE488, TCP/IP\n* Gestion en configuration sous Cervisia",
+                        "startDate": "2002-11", 
+                        "endDate": "2003-01"
+        }, {
+                        "id": "6",
+                        "company": "CNES", 
+                        "summary": "Projet RIO : développement en JAVA/Web services",
+                        "project": "Dans le cadre des activités de Cross-support entre agences, le Panel 3 du CCSDS (Consultative Committee for Space Data Systems ) définit des recommandations pour la mise en place de logiciels et processus interopérables. Par exemple, la recommandation CCSDS du Service Management spécifie un système de supervision pour autoriser des demandes d’allocation de ressources, de configuration, d’exécution de services de transfert de données (TM et/ou TC) depuis une station d’une Agence X pour le compte d’une Agence Y. L’objectif du projet RIO consiste à proposer un mécanisme permettant la définition d’une interface de requêtes pour les opérations (appelé « Request Interface for Operations », RIO) afin d’automatiser le workflow client/provider. \n\nL’idée est de proposer un framework permettant de définir de nouvelles requêtes (opérations) qui puissent facilement s’intégrer dans un framework qui gère un ensemble de problématiques communes : accord de fournitures de services (appelé « agreement »), sécurité (authentification pour voir si droit d’exécution), qualité et paramètres de connectivité afin de spécifier les moyens d’échanges de messages. \n\nLa technologie SOAP with Attachment (SwA) a été choisie pour l’échange de messages. Le système de traces utilisé est LOG4J. ANT permet de faciliter la compilation et le déploiement de l’application.",
+                        "mission": "Concepteur, réalisateur, intégrateur JAVA de l’intégralité du projet \n\nA partir de la spécification client, réalisation de la conception détaillée en langage Java (squelette et API des classes Java avec commentaires dans les en-têtes de méthodes, classes) en utilisant le module JBuilder de visualisation UML des classes.\n\nPuis implémentation, tests, validation et livraison.",
+                        "technicalEnv": "* PC sous Windows NT, JAVA, ANT, LOG4J, Web Services, SOAP. \n* Des machines à état UML sont utilisées pour générer les services. \n* Ces machines à états sont au format texte suivant une grammaire CNES (permettant l’utilisation des éléments définis dans les spécifications UML 1.4 en ce qui concerne la description des diagrammes d’état-transition).",
+                        "startDate": "2003-02", 
+                        "endDate": "2003-07"
+        }, {
+                        "id": "7",
+                        "company": "CIRSO", 
+                        "summary": "Projet CEA/TEE : conception UML et développement en JAVA/JSP",
+                        "project": "TTC: Tese, Tesocca, Chèque emploi associatif\n\nIl s’agit de mettre en place un dispositif qui s’inspire du chèque emploi service et qui permette aux très petites associations, qui emploient au plus un salarié (équivalent temps plein), d’assurer leurs obligations d’employeurs et de réaliser l’ensemble des formalités déclaratives associées.\n\nLe dispositif vise à une véritable mesure de simplification des formalités dont ces associations doivent aujourd’hui s’acquitter. Il leur permettra, directement :\n- de réaliser l’ensemble de leurs obligations à partir d’un support unique de déclaration ;\n- d’avoir un organisme de recouvrement unique auquel s’adresser pour toute question.\n\nBesoins :\n- Fournir un dispositif unique et centralisé pour remplir les formalités de déclaration d'embauche et de versement de salaire aux entreprises concernées,\n- Le système doit également permettre aux URSSAF de réaliser le calcul et le recouvrement des cotisations dues par 'employeur utilisateur.\n- Démarrage au 1er janvier 2004 sur intranet.\n\nSolutions :\n- Développement centralisé et capitalisation de la couche métier pour les trois dispositifs ,\n- Spécialisation des IHM dans la couche présentation,\n- Utilisation de la technologie EJB pour l'implémentation des processus métier.",
+                        "mission": "Concepteur, réalisateur, intégrateur JAVA/UML\n\nA partir du cahier des charges client, réalisation du recueil des besoins, de l’analyse et de la conception UML sous Objecteering\n\nPuis implémentation, tests, validation et livraison en JAVA.\n\nConception, réalisation et intégration des couches « présentation » en JSP/Servlet  et « applicative » en JAVA.",
+                        "technicalEnv": "* Déploiement sur serveur d'application BEA WebLogic, SGBD Oracle, serveur web Apache.\n* Développement en Java J2EE, JSP",
+                        "startDate": "2003-08", 
+                        "endDate": "2004-05"
+        }, {
+                        "id": "8",
+                        "company": "France Telecom", 
+                        "summary": "Projet RCE : développement en JAVA/Struts/Hibernate",
+                        "project": "RCE : Référentiel Client Entreprise\n\nLe projet RCE vise à mettre à disposition de diverses applications France Telecom et de ces filiales un référentiel français  des clients Entreprise.",
+                        "mission": "Concepteur, réalisateur, intégrateur JAVA/UML\n\nConception, réalisation et intégration des couches « présentation » en JSP/ Struts  et « persistance» en JAVA/Hibernate.",
+                        "technicalEnv": "* Déploiement sur serveur d'application IBM WebSphere, SGBD Oracle, serveur web Apache.\n* Développement en Java J2EE, JSP",
+                        "startDate": "2004-06", 
+                        "endDate": "2004-12"
+        }, {
+                        "id": "9",
+                        "company": "AIRBUS", 
+                        "summary": "Projet ARM : architecture/conception/développement en JAVA/Struts",
+                        "project": "ARM : ADOC Revision Manager\n\nARM fait parti de la famille des outils ADOC, un ensemble d’applications de gestion documentaire développées par AIRBUS à destination des compagnies aériennes.\n\nLa fonction d’ARM est de permettre la gestion des révisions des documents sols liés à l’avion de type document de maintenance.",
+                        "mission": "Architecte, concepteur, réalisateur, intégrateur\n\nConception, réalisation et intégration des couches « présentation » en JSP/Struts  et « persistance » en JAVA/JDBC.",
+                        "technicalEnv": "* Déploiement sur serveur d'application spécifique, SGBD Oracle, serveur web Apache.\n* Développement en JavaEE, JSP",
+                        "startDate": "2005-01", 
+                        "endDate": "2005-12"
+        }, {
+                        "id": "10",
+                        "company": "ABN-AMRO", 
+                        "summary": "Projet Neuflize : développement en C#",
+                        "project": "Banque de Neuflize\n\nDéveloppement d’un outil de gestions des actions pour la banque de Neuflize",
+                        "mission": "Concepteur, développeur, intégrateur\n\nConception, réalisation et intégration des couches « présentation », « persistance » en WinForms, NHibernate.",
+                        "technicalEnv": "* Développement en C#",
+                        "startDate": "2006-01", 
+                        "endDate": "2006-04"
+        }, {
+                        "id": "11",
+                        "company": "IB Formation", 
+                        "summary": "Formateur en Java, Java EE, UML, XML, Hibernate, Struts",
+                        "project": "Formation",
+                        "mission": "Formateur",
+                        "technicalEnv": "* Java, Java EE, UML, XML, Hibernate",
+                        "startDate": "2006-05", 
+                        "endDate": "2007-04"
+        }, {                                                
+                        "id": "12",
+                        "company": "Gouvernement de Nouvelle Calédonie",
+                        "summary": "Architecte logiciel",
+                        "project": "Tous les projets de gestion du gouvernement",
+                        "mission": "Architecte de la section architecture logicielle\n\nL’architecte logiciel est chargé du suivi du bon déroulement des développements (support technique, réalisation de nouvelles fonctionnalités dans le framework, conseil, etc...) et du suivi du bon fonctionnement de l’architecture logicielle existante (exploitation, maintenance et administration,\ etc...) dans le cadre de la mise en œuvre et de la maintenance des applications et des sites du Gouvernement de la Nouvelle-Calédonie.\n\nIl prend en charge la gestion de projets d’architecture logicielle, tout en s’assurant que les solutions envisagées sont définies et conçues sous forme collégiale avec les développeurs Experts du service, et validée par la structure décisionnelle de la Direction.",
+                        "technicalEnv": "* Java, Java EE, XML, Oracle ADF, Maven, Gradle, JIRA, Confluence, FishEye, Bamboo, Gitlab, Angular, Springboot",
+                        "startDate": "2007-06", 
+                        "endDate": ""
+        }];
+                    return {
+                        getContact: function() {
+                            return me;
+                        },
+                        getAbout: function() {
+                            return about;
+                        },                        
+                        getSkills: function() {
+                            return skills;
+                        },                        
+                        getEducation: function() {
+                            return education;
+                        },                        
+                        getItems: function (id) {
+                            return (id === 0) ? items : items[id - 1];
+                        }
+                    };
+                });
+        </script>
+    </body>
+
+</html>
